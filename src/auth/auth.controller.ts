@@ -12,15 +12,16 @@ export class AuthController {
 
     @Post('login')
     @Public()
-    async login(@Body() userDto: UserDto): Promise<{ accessToken: string }> {
+    async login(@Body() userDto: UserDto): Promise<{ accessToken: string, userId: string }> {
         const user = await this.authService.login(userDto.email, userDto.password);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
 
         const accessToken = this.generateToken(user);
-        return { accessToken };
+        return { accessToken, userId: user.userId };
     }
+
 
     @Post('signup')
     @Public()
@@ -31,7 +32,6 @@ export class AuthController {
     private generateToken(user: UserDto): string {
         const payload = {
             userId: user.userId,
-            username: user.username,
             email: user.email,
             isAdmin: user.isAdmin,
         };

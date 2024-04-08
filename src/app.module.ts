@@ -43,6 +43,6 @@ import { APP_INTERCEPTOR, APP_GUARD, APP_FILTER, APP_PIPE } from '@nestjs/core';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes('api/doctors', 'api/user');
+    consumer.apply(JwtMiddleware).forRoutes('api/user');
   }
 }

@@ -1,11 +1,10 @@
-// firebase.service.ts
 import { Injectable } from '@nestjs/common';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, collection, getDoc, updateDoc, deleteDoc, setDoc, getDocs } from 'firebase/firestore';
 import { config } from 'dotenv';
 
-config(); // Load environment variables
+config();
 
 @Injectable()
 export class FirebaseService {

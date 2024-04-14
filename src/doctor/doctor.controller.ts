@@ -1,4 +1,3 @@
-// doctor.controller.ts
 import { Controller, Get, Post, Body, Param, Put, Delete, UsePipes, ParseUUIDPipe } from '@nestjs/common';
 import { DoctorDto } from './dto/doctor.dto';
 import { DoctorService } from './doctor.service';

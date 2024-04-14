@@ -11,12 +11,12 @@ export class JwtMiddleware implements NestMiddleware {
       throw new UnauthorizedException('Authorization header is missing');
     }
 
-    const token = authHeader.split(' ')[1]; // Extract the token from the authorization header
+    const token = authHeader.split(' ')[1];
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded; // Attach the decoded user object to the request for further processing
-      next(); // Proceed to the next middleware or route handler
+      req.user = decoded;
+      next();
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }

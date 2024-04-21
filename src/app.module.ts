@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DoctorController } from './doctor/doctor.controller';
@@ -12,37 +12,38 @@ import { UserModule } from './user/user.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { JwtMiddleware } from './jwt/jwt.middleware';
-import { UserGuard } from './user/user.guard';
+import { AuthenticationGuard } from './auth/authentication.guard';
+import { AuthorizationGuard } from './auth/authorization.guard';
 import { LoggingInterceptor } from './logging/logging.interceptor';
 import { ValidateDoctorPipe } from './doctor/validate-doctor/validate-doctor.pipe';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
-import { APP_INTERCEPTOR, APP_GUARD, APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_FILTER, } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [DoctorModule, FirebaseModule, UserModule, AuthModule],
   controllers: [AppController, DoctorController, UserController, AuthController],
-  providers: [AppService, FirebaseService, DoctorService, UserService, AuthService, JwtMiddleware, UserGuard, LoggingInterceptor, ValidateDoctorPipe, HttpExceptionFilter
+  providers: [AppService, FirebaseService, DoctorService, UserService, AuthService, AuthenticationGuard, AuthorizationGuard, JwtService, LoggingInterceptor, ValidateDoctorPipe, HttpExceptionFilter
     ,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
     {
-      provide: APP_GUARD,
-      useClass: UserGuard,
-    },
-    {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
-    },
-    {
-      provide: APP_PIPE,
-      useClass: ValidateDoctorPipe
-    }],
+    }
+  ],
 })
+
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes('api/doctors', 'api/user');
+
+  configure(consumer: import('@nestjs/common').MiddlewareConsumer) {
+    consumer
+      .apply()
+      .forRoutes(DoctorController);
   }
 }
+
+
+
